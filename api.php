@@ -68,7 +68,8 @@ $digLookup = static function (string $host, string $type, ?string &$error = null
     foreach ($lines as $line) {
         if (preg_match('/status:\s*([A-Z]+)/', $line, $matches)) {
             $statusText = strtoupper($matches[1]);
-            if ($statusText !== 'NOERROR') {
+            $errorStatuses = ['SERVFAIL', 'REFUSED', 'FORMERR', 'NOTAUTH', 'NOTZONE'];
+            if (in_array($statusText, $errorStatuses, true)) {
                 $error = sprintf('dig status %s för %s (%s).', $statusText, $host, $type);
             }
             break;
@@ -98,7 +99,11 @@ $dohLookup = static function (string $host, string $type, ?string &$error = null
         return [];
     }
     if (!empty($payload['Status']) && (int) $payload['Status'] !== 0) {
-        $error = sprintf('DNS-over-HTTPS status %d för %s (%s).', (int) $payload['Status'], $host, $type);
+        $status = (int) $payload['Status'];
+        $errorStatuses = [2, 5, 9, 10];
+        if (in_array($status, $errorStatuses, true)) {
+            $error = sprintf('DNS-over-HTTPS status %d för %s (%s).', $status, $host, $type);
+        }
         return [];
     }
     $answers = $payload['Answer'] ?? [];
