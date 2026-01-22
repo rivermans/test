@@ -52,6 +52,7 @@ $dnsErrors = [];
 
 $types = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'SOA'];
 $recordsByType = [];
+$warnOnFailureTypes = ['A', 'MX', 'TXT', 'NS', 'SOA'];
 
 $digLookup = static function (string $host, string $type, ?string &$error = null): array {
     $command = sprintf('dig +time=2 +tries=1 +noall +answer +comments %s %s 2>&1', escapeshellarg($host), escapeshellarg($type));
@@ -220,11 +221,11 @@ foreach ($types as $type) {
             if (!empty($dohRecords)) {
                 $records = $dohRecords;
             }
-            if ($dohError) {
+            if ($dohError && in_array($type, $warnOnFailureTypes, true)) {
                 $dnsErrors[] = $dohError;
             }
         }
-        if ($digError) {
+        if ($digError && in_array($type, $warnOnFailureTypes, true)) {
             $dnsErrors[] = $digError;
         }
     }
@@ -249,18 +250,12 @@ if (empty($recordsByType['CNAME'])) {
         foreach ($dohLines as $line) {
             $digRecords[] = ['target' => rtrim($line, '.')];
         }
-        if ($dohError) {
-            $dnsErrors[] = $dohError;
-        }
     }
     if (!empty($digRecords)) {
         foreach ($digRecords as $record) {
             $record['host'] = $wwwHost;
             $recordsByType['CNAME'][] = $record;
         }
-    }
-    if ($digError) {
-        $dnsErrors[] = $digError;
     }
 }
 
