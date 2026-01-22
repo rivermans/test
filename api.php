@@ -50,7 +50,7 @@ $dnsRecords = [];
 $analysis = [];
 $dnsErrors = [];
 
-$types = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'CNAME', 'SOA'];
+$types = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'SOA'];
 $recordsByType = [];
 
 $digLookup = static function (string $host, string $type, ?string &$error = null): array {
@@ -161,7 +161,6 @@ foreach ($types as $type) {
                     }
                     break;
                 case 'NS':
-                case 'CNAME':
                     if (preg_match('/\s+IN\s+(NS|CNAME)\s+(.+)$/i', $line, $match)) {
                         $digRecords[] = ['target' => rtrim($match[2], '.')];
                     } else {
@@ -208,7 +207,6 @@ foreach ($types as $type) {
                         $dohRecords[] = ['txt' => trim($line, '"')];
                         break;
                     case 'NS':
-                    case 'CNAME':
                         $dohRecords[] = ['target' => rtrim($line, '.')];
                         break;
                     case 'SOA':
