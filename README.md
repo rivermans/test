@@ -1,35 +1,35 @@
-# Domänanalys
+# Domain Analysis
 
-## Översikt
-Det här projektet är en liten PHP-applikation som analyserar en domäns konfiguration: registry/registrar (via WHOIS), DNS-leverantör (NS), DNS-poster och en sammanfattande analys av vanliga felaktigheter. Gränssnittet består av en enkel index-sida där du skriver in en domän och får resultat utan omladdning.
+## Overview
+This project is a lightweight PHP application that analyzes a domain configuration: registry/registrar (via WHOIS), DNS provider (NS), DNS records, and a summary analysis of common issues. The UI is a simple index page where you enter a domain and get results without a page reload.
 
 ## Installation
-1. **Krav**
-   - PHP 8+ (inbyggd webserver räcker).
-   - `dig` och `whois` installerade i systemet.
+1. **Requirements**
+   - PHP 8+ (the built-in web server is sufficient).
+   - `dig` and `whois` installed on the system.
 
-2. **Starta lokalt**
+2. **Start locally**
    ```bash
    php -S 0.0.0.0:8000 -t .
    ```
 
-3. **Öppna i webbläsare**
+3. **Open in your browser**
    - `http://127.0.0.1:8000/index.php`
 
-## Teknisk beskrivning
+## Technical overview
 - **Frontend (`index.php`)**
-  - Ett formulär med ett domänfält och knappen "Kontrollera".
-  - JavaScript anropar API:t med `fetch` och renderar resultatet utan omladdning.
+  - A form with a domain input and the "Kontrollera" button.
+  - JavaScript calls the API via `fetch` and renders results without reloading the page.
 
 - **API (`api.php`)**
-  - Validerar inmatad domän.
-  - Hämtar WHOIS-information (registry, registrar, utgångsdatum, name servers).
-  - Samlar DNS-poster för A/AAAA/MX/TXT/NS/SOA.
-  - Använder `dns_get_record` först och faller tillbaka till `dig`.
-  - Har DNS-over-HTTPS som extra fallback när lokala uppslag saknar svar.
-  - Försöker hämta zondata via AXFR mot name servers (om tillåtet).
-  - Skapar en analyslista med vanliga varningar (t.ex. saknad MX eller SPF).
+  - Validates the input domain.
+  - Fetches WHOIS data (registry, registrar, expiry date, name servers).
+  - Collects DNS records for A/AAAA/MX/TXT/NS/SOA.
+  - Uses `dns_get_record` first and falls back to `dig`.
+  - Uses DNS-over-HTTPS as an extra fallback when local lookups return no answers.
+  - Attempts to fetch zone data via AXFR against name servers (if allowed).
+  - Builds an analysis list with common warnings (e.g., missing MX or SPF).
 
-- **Svarformat**
-  - API:t returnerar JSON med `nameServers`, `dnsRecords`, `zoneRecords`,
-    `analysis` och eventuella `dnsErrors` för diagnostik.
+- **Response format**
+  - The API returns JSON with `nameServers`, `dnsRecords`, `zoneRecords`,
+    `analysis`, and optional `dnsErrors` for diagnostics.
