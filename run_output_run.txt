@@ -1,5 +1,0 @@
-[Tue Jan 20 21:47:58 2026] PHP 8.5.3-dev Development Server (http://0.0.0.0:8000) started
-[Tue Jan 20 21:47:58 2026] 127.0.0.1:52812 Accepted
-[Tue Jan 20 21:47:59 2026] 127.0.0.1:52812 [200]: GET /api.php?domain=riverman.com
-[Tue Jan 20 21:47:59 2026] 127.0.0.1:52812 Closing
-{"domain":"riverman.com","summary":"Analys klar.","registry":"Okänt","registrar":"Okänt","expiry":"Okänt","nameServers":[],"dnsRecords":["A → 37.27.178.181"],"analysis":["Inga NS-poster hittades. Domänen kan vara felkonfigurerad.","Inga MX-poster hittades. E-post kommer inte fram.","Ingen SPF-post hittades. Rekommenderas för e-postsäkerhet.","DNS-uppslag misslyckades för en eller flera posttyper."],"dnsErrors":["Kunde inte hämta AAAA-poster.","Kunde inte hämta MX-poster.","Kunde inte hämta TXT-poster.","Kunde inte hämta NS-poster.","Kunde inte hämta CNAME-poster.","Kunde inte hämta SOA-poster."]}
